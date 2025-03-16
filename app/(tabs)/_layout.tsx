@@ -1,45 +1,56 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { Tabs } from "expo-router";
+import { ImageBackground, Image, View, Text } from "react-native";
+import { images } from "@/constants/images";
+import { icons } from "@/constants/icons";
+import { globalStyles } from "@/styles/globalStyles";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+const TABS = [
+  { name: "index", title: "Home", icon: icons.home },
+  { name: "search", title: "Search", icon: icons.search },
+  { name: "saved", title: "Saved", icon: icons.save },
+  { name: "profile", title: "Profile", icon: icons.person },
+];
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: any; title: string }) => {
+  return focused ? (
+    <ImageBackground source={images.highlight} style={globalStyles.activeTab}>
+      <Image source={icon} tintColor="#151312" style={globalStyles.icon} />
+      <Text style={globalStyles.activeText}>{title}</Text>
+    </ImageBackground>
+  ) : (
+    <View style={globalStyles.inactiveTab}>
+      <Image source={icon} tintColor="#A8B5DB" style={globalStyles.icon} />
+    </View>
+  );
+};
 
+const _Layout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+        tabBarShowLabel: false,
+        tabBarItemStyle: globalStyles.tabBarItem,
+        tabBarStyle: globalStyles.tabBar,
+      }}
+    >
+      {TABS.map(({ name, title, icon }) => (
+        <Tabs.Screen
+          key={name}
+          name={name}
+          options={{
+            title,
+            headerShown: false,
+            tabBarIcon: ({ focused }) => 
+              <TabIcon 
+                focused={focused} 
+                icon={icon} 
+                title={title} 
+              />,
+          }}
+        />
+      ))}
     </Tabs>
   );
-}
+};
+
+export default _Layout;

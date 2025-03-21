@@ -6,7 +6,7 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: theme.colors.dark200,
     borderRadius: 50,
     marginHorizontal: 20,
-    marginBottom: 36,
+    marginBottom: 66,
     height: 52,
     position: "absolute",
     overflow: "hidden",

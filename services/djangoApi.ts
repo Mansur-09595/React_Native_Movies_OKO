@@ -48,6 +48,10 @@ export const updateSearchCount = async (query: string, movie: Movie): Promise<vo
 export const getTrendingMovies = async (): Promise<TrendingMovie[] | undefined> => {
   try {
     const response = await apiClient.get('/api/trending-movies/');
+    
+    // Логируем данные, которые пришли с API
+    console.log("Trending Movies Data: ", response.data);
+
     return response.data;
   } catch (error) {
     console.error('Error fetching trending movies:', error);

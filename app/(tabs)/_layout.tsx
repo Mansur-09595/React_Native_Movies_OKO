@@ -12,7 +12,7 @@ const TABS = [
 
 const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: any; title: string }) => {
   return focused ? (
-    <View className="flex flex-row flex-1 min-w-[122px] min-h-16 mt-4 items-center justify-center rounded-full overflow-hidden bg-light-100">
+    <View className="flex flex-row flex-1 min-w-[100px] min-h-12 mt-[10px] items-center justify-center rounded-full overflow-hidden bg-light-100">
       <Image source={icon} tintColor="#000000" className="size-5" />
       <Text className="text-secondary text-base font-semibold ml-2">{title}</Text>
     </View>
@@ -40,7 +40,7 @@ const _Layout = () => {
           borderRadius: 50,
           marginHorizontal: 20,
           marginBottom: 66,
-          height: 52,
+          height: 50,
           position: "absolute",
           overflow: "hidden",
           borderWidth: 1,
@@ -48,7 +48,7 @@ const _Layout = () => {
         },
       }}
     >
-      {TABS.map(({ name, title, icon }) => (
+      {TABS.map(({ name, title, icon }, index) => (
         <Tabs.Screen
           key={name}
           name={name}
@@ -56,6 +56,10 @@ const _Layout = () => {
             title,
             headerShown: false,
             tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon={icon} title={title} />,
+            tabBarItemStyle: {
+              paddingLeft: index === 0 ? 10 : 0, // Отступ слева для первого элемента
+              paddingRight: index === TABS.length - 1 ? 10 : 0, // Отступ справа для последнего элемента
+            },
           }}
         />
       ))}

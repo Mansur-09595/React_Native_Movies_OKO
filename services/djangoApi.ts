@@ -3,7 +3,6 @@ import axios from 'axios';
 // For Android emulator, use 10.0.2.2 to access localhost
 // For iOS simulator, use localhost
 // For physical devices, use your computer's IP address on the same network
-//const API_BASE_URL = 'http://192.168.0.194:8000';
 
 // Create axios instance
 const apiClient = axios.create({

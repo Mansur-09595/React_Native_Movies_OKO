@@ -8,10 +8,10 @@ from .serializers import SearchTermSerializer
 @api_view(['POST'])
 def update_search_count(request):
     try:
-        query = request.data.get('query')
+        query = request.data.get('search_term')
         movie_id = request.data.get('movie_id')
         title = request.data.get('title')
-        poster_path = request.data.get('poster_path')
+        poster_path = request.data.get('poster_url')
 
         if not all([query, movie_id, title, poster_path]):
             return Response({'error': 'Missing required fields'}, status=status.HTTP_400_BAD_REQUEST)
@@ -26,11 +26,12 @@ def update_search_count(request):
                 movie_id=movie_id,
                 title=title,
                 count=1,
-                poster_url=f'https://image.tmdb.org/t/p/w500{poster_path}'
+                poster_url=poster_path
             )
 
         serializer = SearchTermSerializer(search_term)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

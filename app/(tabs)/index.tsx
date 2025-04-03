@@ -1,5 +1,6 @@
 import { Image, ScrollView, Text, View, ActivityIndicator, FlatList } from "react-native";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 
 import { fetchMovies } from "@/services/api";
 import { getTrendingMovies } from "@/services/djangoApi"; 
@@ -13,6 +14,16 @@ import MovieCard from "@/components/MovieCard";
 
 export default function Index() {
   const router = useRouter();
+
+  useEffect(() => {
+    getTrendingMovies()
+      .then(data => {
+        console.log("🔥 DATA:", data);
+      })
+      .catch(err => {
+        console.error("🔥 ERROR:", err.message);
+      });
+  }, []);
 
   const {
     data: trendingMovies,

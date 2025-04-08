@@ -1,4 +1,4 @@
-import { Image, ScrollView, Text, View, ActivityIndicator, FlatList } from "react-native";
+import { Image, ScrollView, Text, View, ActivityIndicator, FlatList, useWindowDimensions  } from "react-native";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 
@@ -14,6 +14,9 @@ import MovieCard from "@/components/MovieCard";
 
 export default function Index() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const logoWidth = width * 0.5;
+  const logoHeight = logoWidth * 0.4;
 
   useEffect(() => {
     getTrendingMovies()
@@ -46,7 +49,12 @@ export default function Index() {
         showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}>
         
-        <Image source={icons.logo} className="w-40 h-20 mt-20 mb-5 mx-auto flex-shrink-0"  resizeMode="contain"/>
+        <Image
+          className="items-center mt-20 mb-5 mx-auto "
+          source={icons.logo}
+          style={{ width: logoWidth, height: logoHeight }}
+          resizeMode="contain"
+        />
 
         {moviesLoading || trendingLoading ? (
           <ActivityIndicator

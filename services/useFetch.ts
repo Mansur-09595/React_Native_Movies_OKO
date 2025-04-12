@@ -1,20 +1,23 @@
-import { useState, useEffect } from "react";
-import axios from "axios"; // если используешь Axios
+// ✅ useFetch.ts — улучшенная версия
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+
+type Status = "idle" | "loading" | "success" | "error";
 
 const useFetch = <T>(fetchFunction: () => Promise<T>, autoFetch = true) => {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<T>(() => [] as unknown as T);
   const [error, setError] = useState<Error | null>(null);
+  const [status, setStatus] = useState<Status>("idle");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      setLoading(true);
+      setStatus("loading");
       setError(null);
-
       const result = await fetchFunction();
       setData(result);
+      setStatus("success");
     } catch (err) {
-      // Расширенная отладка ошибок
+      setStatus("error");
       if (axios.isAxiosError(err)) {
         console.error("❌ Axios error message:", err.message);
         console.error("🛠️ Axios error config:", err.config);
@@ -27,24 +30,32 @@ const useFetch = <T>(fetchFunction: () => Promise<T>, autoFetch = true) => {
         console.error("❓ Unknown error:", err);
         setError(new Error("An unknown error occurred"));
       }
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [fetchFunction]);
 
   const reset = () => {
-    setData(null);
-    setLoading(false);
+    setData(() => [] as unknown as T);
     setError(null);
+    setStatus("idle");
   };
 
   useEffect(() => {
     if (autoFetch) {
       fetchData();
     }
-  }, []);
+  }, [autoFetch, fetchData]);
 
-  return { data, loading, error, refetch: fetchData, reset };
+  return {
+    data,
+    error,
+    refetch: fetchData,
+    reset,
+    status,
+    isLoading: status === "loading",
+    isSuccess: status === "success",
+    isError: status === "error",
+    isIdle: status === "idle",
+  };
 };
 
 export default useFetch;

@@ -1,11 +1,19 @@
+// ✅ Оптимизированный и безопасный Search.tsx с авто-инициализацией массива
+
 import { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, FlatList, Image, useWindowDimensions } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  FlatList,
+  Image,
+  useWindowDimensions,
+} from "react-native";
 
 import { icons } from "@/constants/icons";
-
 import useFetch from "@/services/useFetch";
-import { fetchMovies } from "@/services/api"; // Keep this import for TMDB API
-import { updateSearchCount } from "@/services/djangoApi"; // Import from the new file
+import { fetchMovies } from "@/services/api";
+import { updateSearchCount } from "@/services/djangoApi";
 import SearchBar from "@/components/SearchBar";
 import MovieDisplayCard from "@/components/MovieCard";
 
@@ -17,7 +25,7 @@ const Search = () => {
 
   const {
     data: movies = [],
-    loading,
+    isLoading,
     error,
     refetch: loadMovies,
     reset,
@@ -27,46 +35,38 @@ const Search = () => {
     setSearchQuery(text);
   };
 
-  // Debounced search effect
-// In your Search component
+  useEffect(() => {
+    const timeoutId = setTimeout(async () => {
+      if (searchQuery.trim()) {
+        await loadMovies();
 
-useEffect(() => {
-  const timeoutId = setTimeout(async () => {
-    if (searchQuery.trim()) {
-      await loadMovies();
-
-      // Call updateSearchCount only if there are results
-      if (movies?.length! > 0 && movies?.[0]) {
-        try {
-          await updateSearchCount(searchQuery, movies[0]);
-        } catch (error) {
-          // Just log the error but don't show it to the user
-          console.error('Failed to update search count:', error);
-          // The search functionality still works even if the count update fails
+        if (Array.isArray(movies) && movies.length > 0 && movies[0]) {
+          try {
+            await updateSearchCount(searchQuery, movies[0]);
+          } catch (error) {
+            console.error("Failed to update search count:", error);
+          }
         }
+      } else {
+        reset();
       }
-    } else {
-      reset();
-    }
-  }, 500);
+    }, 500);
 
-  return () => clearTimeout(timeoutId);
-}, [searchQuery]);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   return (
     <View className="flex-1 bg-primary">
-      {/* Rest of your component remains the same */}
-
       <Image
-          className="items-center mt-20 mb-5 mx-auto "
-          source={icons.logo}
-          style={{ width: logoWidth, height: logoHeight }}
-          resizeMode="contain"
-        />
+        className="items-center mt-20 mb-5 mx-auto"
+        source={icons.logo}
+        style={{ width: logoWidth, height: logoHeight }}
+        resizeMode="contain"
+      />
 
       <FlatList
         className="px-5"
-        data={movies as Movie[]}
+        data={movies}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <MovieDisplayCard {...item} />}
         numColumns={3}
@@ -86,7 +86,7 @@ useEffect(() => {
               />
             </View>
 
-            {loading && (
+            {isLoading && (
               <ActivityIndicator
                 size="large"
                 color="#0000ff"
@@ -100,10 +100,10 @@ useEffect(() => {
               </Text>
             )}
 
-            {!loading &&
+            {!isLoading &&
               !error &&
               searchQuery.trim() &&
-              movies?.length! > 0 && (
+              movies.length > 0 && (
                 <Text className="text-xl text-white font-bold">
                   Search Results for{" "}
                   <Text className="text-accent">{searchQuery}</Text>
@@ -112,7 +112,7 @@ useEffect(() => {
           </>
         }
         ListEmptyComponent={
-          !loading && !error ? (
+          !isLoading && !error ? (
             <View className="mt-10 px-5">
               <Text className="text-center text-gray-500">
                 {searchQuery.trim()
@@ -126,5 +126,4 @@ useEffect(() => {
     </View>
   );
 };
-
 export default Search;

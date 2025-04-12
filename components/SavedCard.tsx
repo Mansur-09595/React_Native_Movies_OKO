@@ -1,30 +1,33 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Movie } from "@/services/djangoApi";
+import { FontAwesome } from "@expo/vector-icons";
 
-const STORAGE_KEY = "saved_movies";
+interface SavedCardProps {
+  movie: Movie;
+  onRemove: (id: number) => void;
+}
 
-export const getSavedMovies = async (): Promise<Movie[]> => {
-  const json = await AsyncStorage.getItem(STORAGE_KEY);
-  return json ? JSON.parse(json) : [];
+const SavedCard = ({ movie, onRemove }: SavedCardProps) => {
+  return (
+    <View className="mb-5 bg-dark-100 rounded-xl overflow-hidden shadow-md">
+      <Image
+        source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }}
+        className="w-full h-60"
+        resizeMode="cover"
+      />
+
+      <View className="p-4 flex-row justify-between items-center">
+        <Text className="text-white text-lg font-semibold w-4/5">
+          {movie.title}
+        </Text>
+
+        <TouchableOpacity onPress={() => onRemove(movie.id)}>
+          <FontAwesome name="trash" size={20} color="#fff" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 };
 
-export const saveMovie = async (movie: Movie): Promise<void> => {
-  const movies = await getSavedMovies();
-  const alreadySaved = movies.some((m) => m.id === movie.id);
-
-  if (!alreadySaved) {
-    const updated = [...movies, movie];
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  }
-};
-
-export const removeMovie = async (movieId: number): Promise<void> => {
-  const movies = await getSavedMovies();
-  const updated = movies.filter((m) => m.id !== movieId);
-  await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-};
-
-export const isMovieSaved = async (movieId: number): Promise<boolean> => {
-  const movies = await getSavedMovies();
-  return movies.some((m) => m.id === movieId);
-};
+export default SavedCard;

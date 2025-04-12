@@ -1,10 +1,10 @@
-import { View, TextInput, Image } from "react-native";
+import { View, TextInput, Image, TouchableOpacity } from "react-native";
 import { icons } from "@/constants/icons";
 
 interface Props {
-    placeholder: string;
-    onPress?: () => void;
-    value?: string;
+  placeholder: string;
+  onPress?: () => void;
+  value?: string;
   onChangeText?: (text: string) => void;
 }
 
@@ -17,16 +17,29 @@ const SearchBar = ({ placeholder, onPress, value, onChangeText }: Props) => {
         resizeMode="contain"
         tintColor="#000000"
       />
-      <TextInput
-        onPress={onPress}
-        placeholder={placeholder}
-        value={value}
-        onChangeText={onChangeText}
-        className="flex-1 ml-2 text-black"
-        placeholderTextColor="#000000"
-      />
+      
+      {onPress ? (
+        <TouchableOpacity onPress={onPress} className="flex-1 ml-2">
+          <TextInput
+            pointerEvents="none"
+            editable={false}
+            value={value}
+            placeholder={placeholder}
+            placeholderTextColor="#000000"
+            className="text-black"
+          />
+        </TouchableOpacity>
+      ) : (
+        <TextInput
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          placeholderTextColor="#000000"
+          className="flex-1 ml-2 text-black"
+        />
+      )}
     </View>
-  )
-}
+  );
+};
 
-export default SearchBar
+export default SearchBar;

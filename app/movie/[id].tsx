@@ -5,17 +5,17 @@ import {
   ScrollView,
   TouchableOpacity,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useEffect, useRef } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 
 import { icons } from "@/constants/icons";
-import useFetch from "@/services/useFetch";
-import { fetchMovieDetails } from "@/services/api";
-import { saveMovie, removeMovie, isMovieSaved } from "@/services/savedMovies";
-import Loading from "@/components/Loading";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { fetchMovieDetails } from "@/store/reducers/movies/movieAction";
+import { saveMovie, removeMovie } from "@/store/reducers/saved/savedAction";
 
 const MovieInfo = ({ label, value }: { label: string; value?: string | number | null }) => (
   <View className="flex-col items-start justify-center mt-5">
@@ -28,26 +28,19 @@ const MovieDetails = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const dispatch = useAppDispatch();
+
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  const fetchDetails = useCallback(() => fetchMovieDetails(id as string), [id]);
-  const { data: movie, isLoading } = useFetch(fetchDetails);
-
-  const [isSaved, setIsSaved] = useState(false);
+  const { selectedMovie: movie, isLoading } = useAppSelector((state) => state.movies);
+  const savedMovies = useAppSelector((state) => state.saved.movies);
+  const isSaved = savedMovies.some((m) => String(m.id) === id);
 
   useEffect(() => {
-    let isMounted = true;
-
-    if (movie?.id) {
-      isMovieSaved(movie.id).then((saved) => {
-        if (isMounted) setIsSaved(saved);
-      });
+    if (id) {
+      dispatch(fetchMovieDetails(id as string));
     }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [movie?.id]);
+  }, [id]);
 
   const animateScale = () => {
     Animated.sequence([
@@ -56,16 +49,31 @@ const MovieDetails = () => {
     ]).start();
   };
 
-  const handleToggleSave = async () => {
+  const handleToggleSave = () => {
     if (!movie?.id || !movie.poster_path) return;
-    if (isSaved) await removeMovie(movie.id);
-    else await saveMovie({ id: movie.id, title: movie.title, poster_path: movie.poster_path });
+
+    if (isSaved) {
+      dispatch(removeMovie(movie.id));
+    } else {
+      dispatch(
+        saveMovie({
+          id: movie.id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+        })
+      );
+    }
 
     animateScale();
-    setIsSaved(!isSaved);
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading || !movie) {
+    return (
+      <View className="flex-1 bg-primary justify-center items-center">
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
+    );
+  }
 
   return (
     <View className="bg-primary flex-1">

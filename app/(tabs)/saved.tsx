@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   View,
   Text,
@@ -6,34 +6,27 @@ import {
   Image,
   useWindowDimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { getSavedMovies, removeMovie } from "@/services/savedMovies";
-import { Movie } from "@/services/djangoApi";
+
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { loadSavedMovies, removeMovie } from "@/store/reducers/saved/savedAction";
 import { icons } from "@/constants/icons";
-import Loading from "@/components/Loading";
 
 const Saved = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { movies, isLoading } = useAppSelector((state) => state.saved);
   const { width } = useWindowDimensions();
   const logoWidth = width * 0.5;
   const logoHeight = logoWidth * 0.4;
 
-  const loadSavedMovies = async () => {
-    setIsLoading(true);
-    const saved = await getSavedMovies();
-    setMovies(saved);
-    setIsLoading(false);
-  };
-
   useEffect(() => {
-    loadSavedMovies();
-  }, []);
+    dispatch(loadSavedMovies());
+  }, [dispatch]);
 
-  const handleRemove = async (movieId: number) => {
-    await removeMovie(movieId);
-    await loadSavedMovies();
+  const handleRemove = (id: number) => {
+    dispatch(removeMovie(id));
   };
 
   return (
@@ -48,7 +41,7 @@ const Saved = () => {
       <Text className="text-white text-xl mb-4 font-bold">Saved Movies</Text>
 
       {isLoading ? (
-        <Loading />
+        <ActivityIndicator size="large" color="#fff" />
       ) : (
         <FlatList
           data={movies}

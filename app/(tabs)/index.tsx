@@ -1,50 +1,64 @@
-import { useCallback } from "react";
-import { View, Text, Image, ScrollView, FlatList, useWindowDimensions } from "react-native";
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  ScrollView,
+  ActivityIndicator,
+  useWindowDimensions,
+} from "react-native";
 import { useRouter } from "expo-router";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 
-import { fetchMovies } from "@/services/api";
-import { getTrendingMovies } from "@/services/djangoApi";
 import { icons } from "@/constants/icons";
+import { fetchMovies } from "@/store/reducers/movies/movieAction";
+import { getTrendingMovies } from "@/store/reducers/trending/trendingAction";
 
-import useFetch from "@/services/useFetch";
-import TrendingCard from "@/components/TrendingCard";
 import SearchBar from "@/components/SearchBar";
 import MovieCard from "@/components/MovieCard";
-import Loading from "@/components/Loading";
+import TrendingCard from "@/components/TrendingCard";
 
 export default function Index() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { width } = useWindowDimensions();
   const logoWidth = width * 0.5;
   const logoHeight = logoWidth * 0.4;
 
-  // ✅ Оборачиваем функции в useCallback
-  const fetchTrending = useCallback(() => getTrendingMovies(), []);
-  const fetchLatestMovies = useCallback(() => fetchMovies({ query: "" }), []);
-
   const {
-    data: trendingMovies,
-    isLoading: trendingLoading,
-    error: trendingError,
-  } = useFetch(fetchTrending);
-
-  const {
-    data: movies,
-    isLoading: moviesLoading,
+    latestMovies,
+    isLoading: isMoviesLoading,
     error: moviesError,
-  } = useFetch(fetchLatestMovies);
+  } = useAppSelector((state) => state.movies);
 
-  // 🔄 Пока оба грузятся — показываем лоадер
-  if (trendingLoading || moviesLoading) {
-    return <Loading />;
-  }
+  const {
+    items: trending,
+    isLoading: isTrendingLoading,
+    error: trendingError,
+  } = useAppSelector((state) => state.trending);
 
-  // ⚠️ Обработка ошибок
-  if (trendingError || moviesError) {
+  useEffect(() => {
+    dispatch(fetchMovies())
+    dispatch(getTrendingMovies());
+  }, [dispatch]);
+
+  const isLoading = isMoviesLoading || isTrendingLoading;
+  const hasError = moviesError || trendingError;
+
+  if (isLoading) {
     return (
       <View className="flex-1 bg-primary items-center justify-center">
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <View className="flex-1 bg-primary items-center justify-center px-5">
         <Text className="text-white text-center">
-          Error: {trendingError?.message || moviesError?.message}
+          {moviesError || trendingError}
         </Text>
       </View>
     );
@@ -57,7 +71,7 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
       >
-        {/* 🔰 Логотип */}
+        {/* 🔰 Logo */}
         <Image
           className="items-center mt-20 mb-5 mx-auto"
           source={icons.logo}
@@ -65,14 +79,14 @@ export default function Index() {
           resizeMode="contain"
         />
 
-        {/* 🔍 Поиск */}
+        {/* 🔍 Search */}
         <SearchBar
           onPress={() => router.push("/search")}
           placeholder="Search for a movie"
         />
 
-        {/* 🔥 Тренды */}
-        {trendingMovies && (
+        {/* 🔥 Trending Movies */}
+        {trending.length > 0 && (
           <View className="mt-10">
             <Text className="text-lg text-white font-bold mb-3">
               Trending Movies
@@ -81,13 +95,10 @@ export default function Index() {
               horizontal
               showsHorizontalScrollIndicator={false}
               className="mb-4 mt-3"
-              data={trendingMovies}
+              data={trending}
               contentContainerStyle={{ gap: 26 }}
               renderItem={({ item, index }) => (
-                <TrendingCard
-                  movie={{ ...item, searchTerm: item.title }}
-                  index={index}
-                />
+                <TrendingCard movie={item} index={index} />
               )}
               keyExtractor={(item) => item.movie_id.toString()}
               ItemSeparatorComponent={() => <View className="w-4" />}
@@ -95,12 +106,13 @@ export default function Index() {
           </View>
         )}
 
-        {/* 🎬 Последние */}
+
+        {/* 🎬 Latest Movies */}
         <Text className="text-lg text-white font-bold mt-5 mb-3">
           Latest Movies
         </Text>
         <FlatList
-          data={movies}
+          data={latestMovies}
           renderItem={({ item }) => <MovieCard {...item} />}
           keyExtractor={(item) => item.id.toString()}
           numColumns={3}

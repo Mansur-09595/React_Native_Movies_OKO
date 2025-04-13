@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { Text, Image, TouchableOpacity, View } from "react-native";
-
+import { Movie } from "@/types/IMovie"; 
 import { icons } from "@/constants/icons";
 
 const MovieCard = ({

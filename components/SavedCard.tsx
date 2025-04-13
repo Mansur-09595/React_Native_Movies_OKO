@@ -1,14 +1,22 @@
+// ✅ SavedCard.tsx с использованием Redux Toolkit
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { Movie } from "@/services/djangoApi";
 import { FontAwesome } from "@expo/vector-icons";
+import { useAppDispatch } from "@/hooks/hooks";
+import { removeMovie } from "@/store/reducers/saved/savedAction";
+import { Movie } from "@/types/IMovie";
 
 interface SavedCardProps {
   movie: Movie;
-  onRemove: (id: number) => void;
 }
 
-const SavedCard = ({ movie, onRemove }: SavedCardProps) => {
+const SavedCard = ({ movie }: SavedCardProps) => {
+  const dispatch = useAppDispatch();
+
+  const handleRemove = () => {
+    dispatch(removeMovie(movie.id));
+  };
+
   return (
     <View className="mb-5 bg-dark-100 rounded-xl overflow-hidden shadow-md">
       <Image
@@ -22,7 +30,7 @@ const SavedCard = ({ movie, onRemove }: SavedCardProps) => {
           {movie.title}
         </Text>
 
-        <TouchableOpacity onPress={() => onRemove(movie.id)}>
+        <TouchableOpacity onPress={handleRemove}>
           <FontAwesome name="trash" size={20} color="#fff" />
         </TouchableOpacity>
       </View>

@@ -1,21 +1,21 @@
 
-# 🎬 OKO Movies — Mobile Movie Search App
+# 🎬 OKO Movies — Fullstack Mobile Movie Search App
 
-**OKO Movies** is a full-stack mobile application built with **React Native (Expo)** for the frontend and **Django + Django REST Framework** for the backend.  
-The app allows users to search for movies (via TMDB API), track trending searches, and explore popular titles.  
-Data is synced with a PostgreSQL database and deployed using [Render.com](https://render.com/).
+**OKO Movies** is a fullstack mobile application powered by **React Native (Expo)** on the frontend and **Django + Django REST Framework** on the backend.  
+It allows users to search for movies via TMDB, track trending movie searches, and view popular titles — all with beautiful mobile UI and backend sync.
 
 ---
 
 ## ✨ Features
 
-- 🔍 Search for movies using TMDB API
-- 📊 Automatically tracks and stores search popularity
-- 🔥 View trending movies based on search frequency
-- 🎨 Styled with NativeWind (Tailwind CSS for React Native)
-- 📱 Expo-powered mobile frontend
-- 🌐 Django REST API backend with PostgreSQL
-- ☁️ Deployed on Render.com
+- 🔍 Movie search using TMDB API
+- 🔥 Trending movie tracking based on search popularity
+- ❤️ Save/remove favorite movies using local storage
+- 🚀 Redux Toolkit + AsyncThunk + Axios for state and API
+- 🎨 NativeWind + Tailwind CSS for modern styling
+- 🧠 TypeScript-first development
+- ☁️ Backend on Django + PostgreSQL
+- 📦 Deployed on [Render](https://render.com/)
 
 ---
 
@@ -24,15 +24,20 @@ Data is synced with a PostgreSQL database and deployed using [Render.com](https:
 ```
 /React_Native_Movies_OKO
 │
-├── backend/               # Django backend (API, models, DB)
-│   ├── manage.py
-│   ├── backend/           # Django config (settings, urls, wsgi)
-│   └── requirements.txt
-│
-├── frontend/              # React Native app (Expo + Tailwind + Axios)
-│   ├── app/
-│   ├── components/
-│   ├── services/
+├── frontend/                       # React Native app (Expo + Tailwind + Axios)
+│   ├── app/                        # Expo Router pages (tabs, dynamic movie route)
+│   ├── assets/                     # Fonts, icons, images
+│   ├── backend/                    # Django backend (API, models, DB)
+│      ├── manage.py
+│      ├── movies_backend/          # Django config (settings, urls, wsgi)
+│      └── requirements.txt         # Django project with DRF API
+│   ├── components/                 # Reusable React Native components
+│   ├── constants/                  # Shared constants (icons, images)
+│   ├── hooks/                      # useAppDispatch/useAppSelector hooks
+│   ├── store/                      # Redux Toolkit (movies, trending, saved)
+│   ├── types/                      # TypeScript types/interfaces
+│   ├── .env                        # Environment variables
+│   ├── app.json                    # Expo config
 │   └── package.json
 ```
 
@@ -41,13 +46,14 @@ Data is synced with a PostgreSQL database and deployed using [Render.com](https:
 ## 🚀 Technologies Used
 
 ### Frontend
-- React Native (Expo SDK 52)
+- React Native 0.76 + Expo SDK 52
 - Expo Router
-- Tailwind via NativeWind
-- Axios
-- React Navigation
+- Redux Toolkit + React Redux
+- Axios for API calls
+- NativeWind (Tailwind for RN)
+- TypeScript
 
-### Backend
+### Backend (Django)
 - Django 5.1.7
 - Django REST Framework
 - PostgreSQL (via Render)
@@ -116,24 +122,26 @@ EXPO_PUBLIC_MOVIE_API_KEY=your_tmdb_api_key
 
 ---
 
-## 📡 Deployment (Render.com)
+## 📡 Deployment
 
-- **Backend:** deployed using `gunicorn backend.wsgi:application`
-- **Frontend:** runs on Expo (local / mobile)
+- **Backend**: Hosted on [Render](https://render.com/) using Gunicorn + PostgreSQL
+- **Frontend**: Runs via Expo Go (local or deployed if needed)
 
 ---
 
-## 🧪 Testing
+## 📊 APIs
 
-```bash
-npm test      # Jest testing
-npm run lint  # Expo linting
-```
+- [TMDB API](https://developers.themoviedb.org/3) — for movie search and details
+- Django API:
+  - `/api/trending-movies/` — trending search list
+  - `/api/update-search-count/` — update trending stats
 
 ---
 
 ## 🙏 Credits
 
-- Movie data provided by [TMDB API](https://developers.themoviedb.org/3)
-- Icons by [Expo Vector Icons](https://icons.expo.fyi)
-- UI inspiration from modern mobile movie apps
+- Movie data: [TMDB](https://themoviedb.org)
+- Icons: [Expo Vector Icons](https://icons.expo.fyi)
+- UI: Custom-built, inspired by movie streaming platforms
+
+---

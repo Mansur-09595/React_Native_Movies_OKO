@@ -33,7 +33,7 @@ It allows users to search for movies via TMDB, track trending movie searches, an
 </div>
 
 ### 🌍 Deploy QR Code
-<img src="./assets/images/QR_OKO.png" width="200" height="200" style="margin-top: 16px;" />
+<img src="./assets/images/QR_OKO.png" width="500" height="500" style="object-fit: contain;" />
 
 ---
 

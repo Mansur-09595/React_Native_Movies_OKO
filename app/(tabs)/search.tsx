@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  ActivityIndicator,
-  useWindowDimensions,
-} from "react-native";
+import { View, Text, FlatList, Image, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { icons } from "@/constants/icons";
 import SearchBar from "@/components/SearchBar";

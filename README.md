@@ -19,6 +19,27 @@ It allows users to search for movies via TMDB, track trending movie searches, an
 
 ---
 
+---
+
+## 📱 App Preview
+
+### 🔥 Trending & Search Page
+<img src="./assets/images/page_1.jpg" width="300" />
+
+### 🎬 Movie Details Page
+<img src="./assets/images/page_2.jpg" width="300" />
+
+### 🎬 Saved Page
+<img src="./assets/images/page_3.jpg" width="300" />
+
+### ⚙️ Settings Page
+<img src="./assets/images/page_4.jpg" width="300" />
+
+### 🌍 Deploy 
+<img src="./assets/images/QR_OKO.png" width="300" />
+
+---
+
 ## 📁 Project Structure
 
 ```

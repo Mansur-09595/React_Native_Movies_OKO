@@ -12,7 +12,7 @@ const TABS = [
 
 const TabIcon = ({ focused, icon, title }: { focused: boolean; icon: any; title: string }) => {
   return focused ? (
-    <View className="flex flex-row flex-1 min-w-[100px] min-h-12 mt-[10px] items-center justify-center rounded-full overflow-hidden bg-light-100">
+    <View className="flex flex-row flex-1 min-w-[100px] min-h-14 mt-[10px] items-center justify-center rounded-full overflow-hidden bg-light-100">
       <Image source={icon} tintColor="#000000" className="size-5" />
       <Text className="text-secondary text-base font-semibold ml-2">{title}</Text>
     </View>

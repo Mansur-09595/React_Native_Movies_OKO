@@ -2,21 +2,18 @@ import { createSlice } from '@reduxjs/toolkit';
 import { TrendingMovie } from "@/types/IMovie";
 import { getTrendingMovies } from './trendingAction';
 
-// 👉 1. Определяем тип состояния
 interface TrendingState {
   items: TrendingMovie[];
   isLoading: boolean;
   error: string | null;
 }
 
-// 👉 2. Начальное состояние с типом
 const initialState: TrendingState = {
   items: [],
   isLoading: false,
   error: null,
 };
 
-// 👉 3. Создаём слайс с типами
 const trendingSlice = createSlice({
   name: 'trending',
   initialState,

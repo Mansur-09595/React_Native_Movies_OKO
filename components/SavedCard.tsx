@@ -1,4 +1,3 @@
-// ✅ SavedCard.tsx с использованием Redux Toolkit
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";

@@ -15,12 +15,8 @@ export const getTrendingMovies = createAsyncThunk(
   }
 );
 
-// ✅ Вариант с createAsyncThunk
-export const updateSearchCount = createAsyncThunk<
-  void,
-  { query: string; movie: Movie }
->(
-  'trending/updateSearchCount',
+export const updateSearchCount = createAsyncThunk<void, { query: string; movie: Movie }>(
+  'trending/updateSearchCount', 
   async ({ query, movie }, { rejectWithValue }) => {
     const payload = {
       search_term: query,

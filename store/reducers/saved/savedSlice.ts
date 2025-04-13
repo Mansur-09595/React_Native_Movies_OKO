@@ -1,12 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { loadSavedMovies, saveMovie, removeMovie } from './savedAction';
+import { Movie } from '@/types/IMovie';
+
+interface SavedState {
+  movies: Movie[];
+  isLoading: boolean;
+}
+
+const initialState: SavedState = {
+  movies: [],
+  isLoading: false,
+};
 
 const savedSlice = createSlice({
   name: 'saved',
-  initialState: {
-    movies: [] as { id: string; [key: string]: any }[],
-    isLoading: false,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -21,7 +29,8 @@ const savedSlice = createSlice({
         state.movies.push(action.payload);
       })
       .addCase(removeMovie.fulfilled, (state, action) => {
-        state.movies = state.movies.filter((m) => Number(m.id) !== action.payload);      });
+        state.movies = state.movies.filter((m) => m.id !== action.payload);
+      });
   },
 });
 

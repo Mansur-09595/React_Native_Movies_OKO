@@ -1,13 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  ScrollView,
-  ActivityIndicator,
-  useWindowDimensions,
-} from "react-native";
+import { View, Text, Image, FlatList, ScrollView, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 
@@ -116,6 +108,8 @@ export default function Index() {
           renderItem={({ item }) => <MovieCard {...item} />}
           keyExtractor={(item) => item.id.toString()}
           numColumns={3}
+          refreshing={isMoviesLoading}
+          onRefresh={() => dispatch(fetchMovies({ query: "" }))}
           columnWrapperStyle={{
             justifyContent: "flex-start",
             gap: 20,

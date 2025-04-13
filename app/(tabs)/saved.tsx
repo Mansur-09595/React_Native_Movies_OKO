@@ -1,13 +1,5 @@
 import { useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  ActivityIndicator,
-  useWindowDimensions,
-} from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator, useWindowDimensions } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 

@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  Animated,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity, Animated, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useRef } from "react";

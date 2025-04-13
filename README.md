@@ -23,20 +23,17 @@ It allows users to search for movies via TMDB, track trending movie searches, an
 
 ## 📱 App Preview
 
-### 🔥 Trending & Search Page
-<img src="./assets/images/page_1.jpg" width="300" />
+### 🔥 Trending & Search Page → 🎬 Movie Details → 💾 Saved → ⚙️ Settings
 
-### 🎬 Movie Details Page
-<img src="./assets/images/page_2.jpg" width="300" />
+<div style="display: flex; gap: 16px; overflow-x: auto; padding: 8px 0;"> 
+   <img src="./assets/images/page_1.jpg" width="200" height="400" style="object-fit: cover; border-radius: 8px;" /> 
+   <img src="./assets/images/page_2.jpg" width="200" height="400" style="object-fit: cover; border-radius: 8px;" /> 
+   <img src="./assets/images/page_3.jpg" width="200" height="400" style="object-fit: cover; border-radius: 8px;" /> 
+   <img src="./assets/images/page_4.jpg" width="200" height="400" style="object-fit: cover; border-radius: 8px;" /> 
+</div>
 
-### 🎬 Saved Page
-<img src="./assets/images/page_3.jpg" width="300" />
-
-### ⚙️ Settings Page
-<img src="./assets/images/page_4.jpg" width="300" />
-
-### 🌍 Deploy 
-<img src="./assets/images/QR_OKO.png" width="300" />
+### 🌍 Deploy QR Code
+<img src="./assets/images/QR_OKO.png" width="200" height="200" style="margin-top: 16px;" />
 
 ---
 
